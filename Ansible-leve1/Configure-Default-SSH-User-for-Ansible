@@ -1,0 +1,11 @@
+#Change the directory to Ansible configuration directory
+cd /etc/ansible
+
+#Open the configuration file
+vim ansible.cfg
+
+#Find the [defaults] section, check if there is remote_user; if there isn't add the #configuration; if there is remote_user edit the line
+
+remote_user = james
+
+#Save and exit

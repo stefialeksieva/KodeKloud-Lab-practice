@@ -1,0 +1,20 @@
+Day 1: Create SSH Key Pair for Azure Virtual Machine
+
+#Generate a key with name "datacenter-kp":
+ssh-keygen -t rsa -f ~/.ssh/datacenter-kp
+
+#Explanation of the command:
+#ssh-keygen → generates a new SSH key pair
+#-t rsa → specifies RSA key type
+#-f ~/.ssh/datacenter-kp → sets the key pair name to datacenter-kp
+#The command creates:
+#~/.ssh/datacenter-kp (private key)
+#~/.ssh/datacenter-kp.pub (public key)
+
+#Configuration of Azure env. with details. Show the Azure credentails:
+showcreds
+
+#Login
+az login
+
+az sshkey create --name datacenter-kp --public-key ~/.ssh/datacenter-kp.pub

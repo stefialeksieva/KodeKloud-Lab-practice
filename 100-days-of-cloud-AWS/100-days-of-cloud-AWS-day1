@@ -1,0 +1,28 @@
+# Day 1: Create Key Pair
+
+#in case you need to see the credentials or the enviornment is configured correctly, you #can run
+
+showcreds
+
+#in case the enviornemnt is not configured, you can do it via the following command
+
+aws configure
+
+#Example of the result and expected answers
+#AWS Access Key ID → (from showcreds)
+#AWS Secret Access Key → (from showcreds)
+#Default region name → us-east-1 (It is required by task)
+#Default output format → json (or press Enter)
+
+#Now creating a key with name xfusion-kp
+aws ec2 create-key-pair \
+  --key-name xfusion-kp \
+  --key-type rsa \
+  --query "KeyMaterial" \
+  --output text > xfusion-kp.pem
+
+#Change the permissions
+chmod 400 xfusion-kp.pem
+
+#Verify the key pair exists in AWS
+aws ec2 describe-key-pairs --key-names xfusion-kp

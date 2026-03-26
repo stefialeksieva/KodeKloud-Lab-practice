@@ -1,0 +1,16 @@
+Day 2: Temporary User Setup with Expiry
+
+#Established the SSH connection to the server and change the user to root
+ssh [user]@[server]
+sudo su -
+
+#Command to create
+
+useradd -e 2027-01-28 kirsty
+
+#Verify the change:
+chage -l kirsty
+
+#Set password:
+passwd kirsty
+

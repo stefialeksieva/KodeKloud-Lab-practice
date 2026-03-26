@@ -1,0 +1,11 @@
+Day 1: Linux User Setup with Non-Interactive Shell
+
+#You need to run the command on the lab session:
+
+useradd -s /sbin/nologin kareem
+
+#Explanation of the command is: 
+#useradd → creates the user
+#-s /sbin/nologin → assigns a non‑interactive shell 
+#kareem → the username requested
+#Run the command as root user
