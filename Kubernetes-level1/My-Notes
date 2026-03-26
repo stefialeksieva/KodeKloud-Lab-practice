@@ -1,0 +1,22 @@
+#Hello, this is a note file during the labs, I prefered to have some notes as reminders.
+#Kubernetes equivalent of ansible-doc
+
+kubectl explain pod
+kubectl explain pod.spec
+kubectl explain pod.spec.containers
+kubectl explain pod.spec.containers.image
+
+#Generate YAML from kubectl (the fastest way to get a working template)
+#You can generate a YAML skeleton using --dry-run=client -o yaml
+#Example for a Deployment
+kubectl create deployment myapp --image=nginx --dry-run=client -o yaml
+#Example for a pod
+kubectl run mypod --image=nginx --restart=Never --dry-run=client -o yaml
+
+#Use kubectl api-resources to discover object types
+kubectl api-resources
+
+#Use kubectl get <resource> -o yaml to see real examples
+#If you already have a resource running
+kubectl get deployment nginx -o yaml
+

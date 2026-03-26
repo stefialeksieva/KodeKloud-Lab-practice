@@ -1,7 +1,13 @@
 Day 1: Create SSH Key Pair for Azure Virtual Machine
 
-#Generate a key with name "datacenter-kp":
+#Check the Resource Group
+az group list -o table
+
+#Get the RG, example in my case was "kml_rg_main-edbb50f57466404f"
+
+#Generate a key with name "datacenter-kp"
 ssh-keygen -t rsa -f ~/.ssh/datacenter-kp
+
 
 #Explanation of the command:
 #ssh-keygen → generates a new SSH key pair
@@ -17,4 +23,8 @@ showcreds
 #Login
 az login
 
-az sshkey create --name datacenter-kp --public-key ~/.ssh/datacenter-kp.pub
+az sshkey create \
+  --name datacenter-kp \
+  --resource-group kml_rg_main-edbb50f57466404f \
+  --location eastus \
+  --public-key @/home/azure-user/datacenter-kp.pub
