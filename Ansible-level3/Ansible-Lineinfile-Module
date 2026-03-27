@@ -1,0 +1,19 @@
+#Create a file with content
+
+vim ~/ansible/playbook.yml
+
+---
+- name: Update index.html with welcome message
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Add welcome message at the top of index.html
+      lineinfile:
+        path: /var/www/html/index.html
+        line: "Welcome to Nautilus Group!"
+        insertbefore: BOF
+
+#Run the ansible
+
+ansible-playbook -i /home/thor/ansible/inventory /home/thor/ansible/playbook.yml

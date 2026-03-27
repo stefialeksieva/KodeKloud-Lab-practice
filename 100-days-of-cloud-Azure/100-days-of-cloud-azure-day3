@@ -1,0 +1,15 @@
+Day 3: Create VM using Azure CLI
+
+#Get Resources Group
+az group list -o table
+
+#Create VM
+az vm create \
+  --resource-group <YOUR_RESOURCE_GROUP> \
+  --name nautilus-vm \
+  --image Ubuntu2204 \
+  --size Standard_B2s \
+  --admin-username azureuser \
+  --generate-ssh-keys \
+  --os-disk-size-gb 30 \
+  --storage-sku Standard_LRS

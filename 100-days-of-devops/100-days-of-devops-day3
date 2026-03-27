@@ -1,0 +1,23 @@
+Day 3: Secure Root SSH Access
+
+#Establish an ssh access to the server
+#In my case, I needed to establish an SSH connection to all Application servers
+ssh tony@stapp01
+ssh steve@stapp02
+ssh banner@stapp03
+
+#Switch the user to root on each server
+sudo su - 
+#Edit the SSH daemon config on each server
+vim /etc/ssh/sshd_config
+
+#Find the following line
+PermitRootLogin yes
+
+#and change it to 'no'
+PermitRootLogin no
+#If the line is missing, add it in the file.
+
+#After that restart the SSH service on each server
+systemctl restart sshd
+systemctl restart ssh

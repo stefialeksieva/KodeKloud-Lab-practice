@@ -1,0 +1,19 @@
+Day 7: Create a Public IP Address for Azure VM
+
+#Get the resource Group
+az group list -o table
+
+#Create a network public-IP 
+az network public-ip create \
+  --resource-group <YOUR_RESOURCE_GROUP> \
+  --name datacenter-pip \
+  --location <REGION>
+
+#You will need to change the resource group in the command above and region. 
+
+#Verify the public IP was created
+
+az network public-ip show \
+  --resource-group <YOUR_RESOURCE_GROUP> \
+  --name datacenter-pip \
+  -o table

@@ -1,0 +1,10 @@
+Day 8: Install Ansible
+
+#Install pip3 (if not already installed)
+sudo yum install -y python3-pip
+
+#Install Ansible 4.8.0 globally using pip3
+sudo pip3 install ansible==4.8.0
+
+#Verify ansible
+ansible --version

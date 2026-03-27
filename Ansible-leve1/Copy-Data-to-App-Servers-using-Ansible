@@ -1,0 +1,15 @@
+#Check the ansible host
+cat /etc/ansible/hosts
+
+#Verify it looks
+#server-hostname ansible_host=IP.IP.IP.IP ansible_user=[username]
+#In my case
+[mailservers]
+stmail01 ansible_host=172.16.238.17 ansible_connection=ssh ansible_user=james ansible_password='XXXX'
+
+#Test the SSH connection
+ssh james@172.16.238.17
+
+#Ansible test
+ansible stmail01 -m ping
+

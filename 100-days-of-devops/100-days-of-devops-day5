@@ -1,0 +1,17 @@
+Day 5: SElinux Installation and Configuration
+
+#Install SElinux
+sudo yum install -y selinux-policy selinux-policy-targeted policycoreutils policycoreutils-python-utils
+
+#Enable SElinux via editing the file and write to SELINUX to disabled
+vim /etc/selinux/config
+
+SELINUX=disabled
+
+#Once you save the file, you can check the status
+getenforce
+
+#You can check it via grep
+grep SELINUX= /etc/selinux/config
+
+#In the KodeKloud is not needed to reboot the server, but generally it is important to reboot it and check if the configuration is permanent

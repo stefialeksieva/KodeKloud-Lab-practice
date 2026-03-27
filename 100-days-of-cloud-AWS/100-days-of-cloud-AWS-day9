@@ -1,0 +1,20 @@
+Day 9: Enable Termination Protection for EC2 Instance
+
+#Locate instance id
+aws ec2 describe-instances \
+  --region us-east-1 \
+  --filters "Name=tag:Name,Values=devops-ec2" \
+  --query "Reservations[*].Instances[*].InstanceId" \
+  --output text
+
+#Enable termination protection
+aws ec2 modify-instance-attribute \
+  --region us-east-1 \
+  --instance-id <INSTANCE_ID> \
+  --disable-api-termination
+
+#Verify
+aws ec2 describe-instance-attribute \
+  --region us-east-1 \
+  --instance-id <INSTANCE_ID> \
+  --attribute disableApiTermination

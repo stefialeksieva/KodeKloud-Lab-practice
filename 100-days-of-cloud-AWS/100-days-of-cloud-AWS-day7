@@ -1,0 +1,48 @@
+Day 7: Change EC2 Instance Type
+
+#Get the Instance id
+aws ec2 describe-instances \
+  --region us-east-1 \
+  --filters "Name=tag:Name,Values=xfusion-ec2" \
+  --query "Reservations[*].Instances[*].InstanceId" \
+  --output text
+
+#AWS requires the instance to finish initializing before modification.
+#Check the instance status
+aws ec2 wait instance-status-ok \
+  --region us-east-1 \
+  --instance-ids <INSTANCE_ID>
+
+#Stop instance
+aws ec2 stop-instances \
+  --region us-east-1 \
+  --instance-ids <INSTANCE_ID>
+
+#Wait the instance is fully stopped
+aws ec2 wait instance-stopped \
+  --region us-east-1 \
+  --instance-ids <INSTANCE_ID>
+
+#Modify the instance with the requested type
+aws ec2 modify-instance-attribute \
+  --region us-east-1 \
+  --instance-id <INSTANCE_ID> \
+  --instance-type "{\"Value\": \"t2.nano\"}"
+
+
+#Start the instance
+aws ec2 start-instances \
+  --region us-east-1 \
+  --instance-ids <INSTANCE_ID>
+
+#Wait until the instance is fully started
+aws ec2 wait instance-running \
+  --region us-east-1 \
+  --instance-ids <INSTANCE_ID>
+
+#Verify the Change
+aws ec2 describe-instances \
+  --region us-east-1 \
+  --instance-ids <INSTANCE_ID> \
+  --query "Reservations[*].Instances[*].[InstanceId,InstanceType,State.Name]" \
+  --output table

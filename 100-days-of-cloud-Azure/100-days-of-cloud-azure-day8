@@ -1,0 +1,16 @@
+Day 8: Attach Managed Disk to Azure Virtual Machine
+
+#Get the resource Group
+az group list -o table
+
+#Attach the existing managed disk
+az vm disk attach \
+  --resource-group <YOUR_RESOURCE_GROUP> \
+  --vm-name nautilus-vm \
+  --name nautilus-disk
+
+#Verify the disk is attached
+az vm show \
+  --resource-group <YOUR_RESOURCE_GROUP> \
+  --name nautilus-vm \
+  --query "storageProfile.dataDisks"

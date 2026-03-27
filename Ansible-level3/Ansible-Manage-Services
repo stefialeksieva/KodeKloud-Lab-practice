@@ -1,0 +1,22 @@
+#Create a file with content
+vim /home/thor/ansible/playbook.yml
+
+---
+- name: Install and configure vsftpd on app servers
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Install vsftpd package
+      package:
+        name: vsftpd
+        state: present
+
+    - name: Ensure vsftpd service is started and enabled
+      service:
+        name: vsftpd
+        state: started
+        enabled: yes
+
+#Run the playbook
+ansible-playbook -i /home/thor/ansible/inventory /home/thor/ansible/playbook.yml

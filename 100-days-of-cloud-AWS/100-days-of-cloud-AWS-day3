@@ -1,0 +1,42 @@
+Day 3: Create Subnet
+
+#Get the default VPC ID
+aws ec2 describe-vpcs \
+  --filters Name=isDefault,Values=true \
+  --region us-east-1 \
+  --query "Vpcs[0].VpcId" \
+  --output text
+
+#Example of result vpc-0abc123def4567890
+
+#Check the CIDR in use
+aws ec2 describe-subnets \
+  --filters Name=vpc-id,Values=vpc-0abc123def4567890 \
+  --region us-east-1 \
+  --query "Subnets[*].CidrBlock"
+
+#Example result
+#    "172.31.80.0/20",
+#    "172.31.32.0/20",
+#    "172.31.0.0/20",
+#    "172.31.48.0/20",
+#    "172.31.16.0/20",
+#    "172.31.64.0/20"
+#Each /20 block covers 4096 IPs, so they occupy these ranges:
+#Existing Subnet	Range Covered
+# 172.31.0.0/20	172.31.0.0 – 172.31.15.255
+# 172.31.16.0/20	172.31.16.0 – 172.31.31.255
+# 172.31.32.0/20	172.31.32.0 – 172.31.47.255
+# 172.31.48.0/20	172.31.48.0 – 172.31.63.255
+# 172.31.64.0/20	172.31.64.0 – 172.31.79.255
+# 172.31.80.0/20	172.31.80.0 – 172.31.95.255
+
+#Create the subnet
+
+aws ec2 create-subnet \
+  --vpc-id vpc-0abc123def4567890 \
+  --cidr-block 172.31.96.0/24 \
+  --availability-zone us-east-1a \
+  --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=xfusion-subnet}]' \
+  --region us-east-1
+

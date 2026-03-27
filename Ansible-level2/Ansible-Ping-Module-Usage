@@ -1,0 +1,10 @@
+#Check the inventory file
+cat /home/thor/ansible/inventory
+
+#And if you see the configuration there like
+stapp01 ansible_host=IP.IP.IP.IP ansible_user=tony ansible_ssh_pass=XXXXX
+stapp02 ansible_host=IP.IP.IP.IP ansible_user=steve ansible_ssh_pass=XXXX
+stapp03 ansible_host=IP.IP.IP.IP ansible_user=banner ansible_ssh_pass=XXXX
+
+#Run the ansible
+ansible stapp02 -i /home/thor/ansible/inventory -m ping

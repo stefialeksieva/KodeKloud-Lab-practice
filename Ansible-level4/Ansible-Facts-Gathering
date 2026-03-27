@@ -1,0 +1,36 @@
+#Create a file with the following content
+vim ~/ansible/playbook.yml
+
+---
+- hosts: all
+  become: true
+  gather_facts: true
+
+  tasks:
+
+    - name: Create facts.txt with architecture info
+      blockinfile:
+        path: /root/facts.txt
+        create: yes
+        block: |
+          Ansible managed node architecture is {{ ansible_architecture }}
+
+    - name: Install Apache
+      package:
+        name: httpd
+        state: present
+
+    - name: Copy facts.txt to index.html
+      copy:
+        src: /root/facts.txt
+        dest: /var/www/html/index.html
+        remote_src: yes
+
+    - name: Start Apache
+      service:
+        name: httpd
+        state: started
+
+#Verify
+
+ansible-playbook -i /home/thor/ansible/inventory /home/thor/ansible/playbook.yml

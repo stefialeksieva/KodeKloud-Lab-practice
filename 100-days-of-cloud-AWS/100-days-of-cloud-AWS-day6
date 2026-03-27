@@ -1,0 +1,34 @@
+Day 6: Launch EC2 Instance
+
+#Create a key for ssh connection
+aws ec2 create-key-pair \
+  --key-name nautilus-kp \
+  --key-type rsa \
+  --query "KeyMaterial" \
+  --output text > nautilus-kp.pem
+
+#Set correct permissions
+chmod 400 nautilus-kp.pem
+
+#For ec2 we need an image
+aws ec2 describe-images \
+  --owners amazon \
+  --filters "Name=name,Values=amzn2-ami-hvm-*-x86_64-gp2" \
+  --query "Images[0].ImageId" \
+  --region us-east-1 \
+  --output text
+
+#Once you have key and image name, you can create an ec2
+aws ec2 run-instances \
+  --image-id <AMI_ID> \
+  --instance-type t2.micro \
+  --key-name nautilus-kp \
+  --security-groups default \
+  --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=nautilus-ec2}]' \
+  --region us-east-1
+
+#Confirm the ec2 is running
+aws ec2 describe-instances \
+  --filters "Name=tag:Name,Values=nautilus-ec2" \
+  --region us-east-1 \
+  --output table

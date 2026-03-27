@@ -1,0 +1,60 @@
+# Task1
+
+#Edit the ansible configuration file
+vim /etc/ansible/ansible.cfg
+
+#Find the [defaults] section, check if there is "remote_user" line, In case, there isn't #such line - add "remote_user = root"
+#if the remote user exists, change it to the user in question
+remote_user = siva
+
+# Task2
+
+#Edit the file /home/thor/ansible-t5q4/ansible-t5q4.cfg as per the task
+#The section is under [privilege_escalation] and you need to uncomment the lines
+
+[privilege_escalation]
+become=True
+become_method=sudo
+become_user=root
+become_ask_pass=False
+
+#What exactly does the lines as per the task requires:
+#become = True → enables privilege escalation
+#become_method = sudo → uses sudo
+#become_user = root → escalates to root
+#become_ask_pass = True → forces Ansible to prompt for sudo password
+
+#Perform a test of the configuration
+export ANSIBLE_CONFIG=/home/thor/ansible-t5q4/ansible-t5q4.cfg
+ansible all -m ping
+
+# Task3
+
+#Edit the file
+vim /home/thor/ansible-t5q5/ansible-t5q5.cfg
+#Inside the [defaults] section, find the line remote_user = root
+remote_user = deploy
+
+#Perform a test of the configuration
+export ANSIBLE_CONFIG=/home/thor/ansible-t5q5/ansible-t5q5.cfg
+ansible all -m ping
+
+# Task4
+
+#Creating the file with content
+vim /home/thor/playbook/playbook-t4q6.yml
+
+---
+- hosts: all
+  become: true
+  tasks:
+    - name: Create /opt/file-t4q6.txt with required content
+      file:
+        path: /opt/file-t4q6.txt
+        state: touch
+        owner: root
+        group: root
+        mode: '0644'
+
+#Test the configuration via run the Ansible playbook
+ansible-playbook -i /home/thor/playbook/inventory-t4q6 /home/thor/playbook/playbook-t4q6.yml

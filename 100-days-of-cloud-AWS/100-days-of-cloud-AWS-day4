@@ -1,0 +1,14 @@
+Day 4: Enable Versioning for S3 Bucket
+
+#AWS-CLI'd already configured on KodeKloud enviornment
+#Using AWS-CLI to enable versioning on the bucket
+
+aws s3api put-bucket-versioning \
+  --bucket xfusion-s3-25866 \
+  --versioning-configuration Status=Enabled \
+  --region us-east-1
+
+#Check
+aws s3api get-bucket-versioning \
+  --bucket xfusion-s3-25866 \
+  --region us-east-1
