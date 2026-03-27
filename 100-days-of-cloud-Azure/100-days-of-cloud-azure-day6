@@ -1,0 +1,19 @@
+Day 6: Create a Subnet in Azure Virtual Network
+
+#Get the resource Group
+az group list -o table
+
+#Create the VNet and subnet:
+az network vnet create \
+  --resource-group <YOUR_RESOURCE_GROUP> \
+  --name xfusion-vnet \
+  --location centralus \
+  --address-prefixes 10.0.0.0/16 \
+  --subnet-name xfusion-subnet \
+  --subnet-prefixes 10.0.0.0/24
+
+#Verify the resource
+az network vnet show \
+  --resource-group <YOUR_RESOURCE_GROUP> \
+  --name xfusion-vnet \
+  -o table

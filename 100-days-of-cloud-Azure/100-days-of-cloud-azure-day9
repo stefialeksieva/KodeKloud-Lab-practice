@@ -1,0 +1,26 @@
+Day 9: Attach Network Interface Card (NIC) to Azure Virtual Machine
+
+#Get Resourse Group
+az group list -o table
+
+#Stop and deallocate the VM
+az vm deallocate \
+  --resource-group <RESOURCE_GROUP> \
+  --name nautilus-vm
+
+#Attach the NIC to the VM
+az vm nic add \
+  --resource-group <RESOURCE_GROUP> \
+  --vm-name nautilus-vm \
+  --nics nautilus-nic
+
+#Start the VM again
+az vm start \
+  --resource-group <RESOURCE_GROUP> \
+  --name nautilus-vm
+
+#Verify
+az vm show \
+  --resource-group <RESOURCE_GROUP> \
+  --name nautilus-vm \
+  --query "networkProfile.networkInterfaces" -o table

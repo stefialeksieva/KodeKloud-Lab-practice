@@ -1,0 +1,28 @@
+Day 2: Create Security Group
+
+#Get the default VPC
+aws ec2 describe-vpcs --filters Name=isDefault,Values=true --region us-east-1 --query "Vpcs[0].VpcId" --output text
+
+#Create a security Group and change the vpc-id value to the result from
+#the first command
+aws ec2 create-security-group \
+  --group-name devops-sg \
+  --description "Security group for Nautilus App Servers" \
+  --vpc-id <YOUR_DEFAULT_VPC_ID> \
+  --region us-east-1
+
+# Add inbound rule HTTP port 80 as per the task it was requested
+aws ec2 authorize-security-group-ingress \
+  --group-id <YOUR_SG_ID> \
+  --protocol tcp \
+  --port 80 \
+  --cidr 0.0.0.0/0 \
+  --region us-east-1
+
+# Add inbound rule SSH port 22 as per the task it was requested
+aws ec2 authorize-security-group-ingress \
+  --group-id <YOUR_SG_ID> \
+  --protocol tcp \
+  --port 22 \
+  --cidr 0.0.0.0/0 \
+  --region us-east-1

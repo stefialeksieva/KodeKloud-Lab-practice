@@ -1,0 +1,68 @@
+#Create yaml file as per task with following content
+vim /home/thor/ansible/playbook.yml
+
+---
+- hosts: all
+  become: true
+
+  tasks:
+
+    - name: Create a file on app server 2
+      file:
+        path: "{{ item.src }}"
+        state: touch
+        owner: "{{ item.dest }}"
+        group: "{{ item.dest }}"
+      with_items:
+        - { src: "/opt/data/story.txt", dest: "steve" }
+      when: ansible_host == "IP.IP.IP.IP" # IP for server 2
+
+    - name: Create a file on app server 1
+      file:
+        path: "{{ item.src }}"
+        state: touch
+        owner: "{{ item.dest }}"
+        group: "{{ item.dest }}"
+      with_items:
+        - { src: "/opt/data/blog.txt", dest: "tony" }
+      when: ansible_host == "IP.IP.IP.IP" # IP for server 1
+
+    - name: Create a file on app server 3
+      file:
+        path: "{{ item.src }}"
+        state: touch
+        owner: "{{ item.dest }}"
+        group: "{{ item.dest }}"
+      with_items:
+        - { src: "/opt/data/media.txt", dest: "banner" }
+      when: ansible_host == "IP.IP.IP.IP" # IP for server 3
+
+    - name: Create a symbolic link
+      file:
+        src: /opt/data
+        dest: /var/www/html
+        state: link
+
+
+#Run the ansible playbook
+ansible-playbook -i /home/thor/ansible/inventory /home/thor/ansible/playbook.yml
+
+#Where inventory file content is:
+[all]
+stapp01 ansible_host=IP.IP.IP.IP ansible_user=tony ansible_ssh_pass=XXXXXX
+stapp02 ansible_host=IP.IP.IP.IP ansible_user=steve ansible_ssh_pass=XXXXXX
+stapp03 ansible_host=IP.IP.IP.IP ansible_user=banner ansible_ssh_pass=XXXXXX
+
+#Verification steps are
+#1. Establish an ssh connection to the each host
+ssh tony@IP.IP.IP.IP
+ssh steve@IP.IP.IP.IP
+ssh banner@IP.IP.IP.IP
+
+#2. List the content of directory
+ls -l /opt/data/
+
+#3. You should see
+story.txt on stapp02
+blog.txt on stapp01
+media.txt on stapp03

@@ -1,0 +1,14 @@
+Day 5: Create GP3 Volume
+
+#AWS-CLI command to create the Volume
+aws ec2 create-volume \
+  --availability-zone us-east-1a \
+  --size 2 \
+  --volume-type gp3 \
+  --tag-specifications 'ResourceType=volume,Tags=[{Key=Name,Value=datacenter-volume}]' \
+  --region us-east-1
+
+#Check the volume
+aws ec2 describe-volumes \
+  --filters "Name=tag:Name,Values=datacenter-volume" \
+  --region us-east-1

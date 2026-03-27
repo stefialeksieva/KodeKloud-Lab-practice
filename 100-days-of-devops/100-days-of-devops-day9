@@ -1,0 +1,35 @@
+Day 9: MariaDB Troubleshooting
+
+#Establish an SSH connection
+ssh peter@stdb01
+
+#Switch user to root
+sudo su -
+
+#Check the service
+systemctl status mariadb
+
+#When I tried starting the service, I got the following error
+systemctl start mariadb
+Job for mariadb.service failed because the control process exited with error code.
+See "systemctl status mariadb.service" and "journalctl -xeu mariadb.service" for details.
+
+Logs:
+
+Mar 05 07:21:00 stdb01.stratos.xfusioncorp.com systemd[1]: mariadb.service: Got notification message from PID 1454 (STATUS=Free innodb buffer pool, EXTEND_TIMEOUT_USEC=30000000)
+Mar 05 07:21:00 stdb01.stratos.xfusioncorp.com systemd[1]: mariadb.service: Got notification message from PID 1454 (STATUS=MariaDB server is down)
+Mar 05 07:21:00 stdb01.stratos.xfusioncorp.com systemd[1]: mariadb.service: Got notification message from PID 1454 (STATUS=MariaDB server is down)
+Mar 05 07:21:00 stdb01.stratos.xfusioncorp.com systemd[1]: mariadb.service: Child 1454 belongs to mariadb.service.
+Mar 05 07:21:00 stdb01.stratos.xfusioncorp.com systemd[1]: mariadb.service: Main process exited, code=exited, status=0/SUCCESS (success)
+Mar 05 07:21:00 stdb01.stratos.xfusioncorp.com systemd[1]: mariadb.service: Deactivated successfully.
+Mar 05 07:21:00 stdb01.stratos.xfusioncorp.com systemd[1]: mariadb.service: Service restart not allowed.
+Mar 05 07:21:00 stdb01.stratos.xfusioncorp.com systemd[1]: mariadb.service: Changed stop-sigterm -> dead
+Mar 05 07:21:00 stdb01.stratos.xfusioncorp.com systemd[1]: mariadb.service: Job 112 mariadb.service/stop finished, result=done
+Mar 05 07:21:00 stdb01.stratos.xfusioncorp.com systemd[1]: Stopped MariaDB 10.5 database server.
+
+#Fix corrupted InnoDB log files
+
+mv /var/lib/mysql/ib_logfile0 /var/lib/mysql/ib_logfile0.bak
+mv /var/lib/mysql/ib_logfile1 /var/lib/mysql/ib_logfile1.bak
+
+systemctl start mariadb

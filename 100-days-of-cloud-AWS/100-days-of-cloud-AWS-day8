@@ -1,0 +1,20 @@
+Day 8: Enable Stop Protection for EC2 Instance
+
+#Check the instanse id
+aws ec2 describe-instances \
+  --region us-east-1 \
+  --filters "Name=tag:Name,Values=datacenter-ec2" \
+  --query "Reservations[*].Instances[*].InstanceId" \
+  --output text
+
+#Enable stop Protection
+aws ec2 modify-instance-attribute \
+  --region us-east-1 \
+  --instance-id <INSTANCE_ID> \
+  --disable-api-stop
+
+#Verify the Change
+aws ec2 describe-instance-attribute \
+  --region us-east-1 \
+  --instance-id <INSTANCE_ID> \
+  --attribute disableApiStop
