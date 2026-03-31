@@ -1,0 +1,28 @@
+Day 10: Attach Elastic IP to EC2 Instance
+
+#Get the instance ID of xfusion-ec2
+aws ec2 describe-instances \
+  --region us-east-1 \
+  --filters "Name=tag:Name,Values=xfusion-ec2" \
+  --query "Reservations[*].Instances[*].InstanceId" \
+  --output text
+
+#Get the allocation ID of xfusion-ec2-eip
+aws ec2 describe-addresses \
+  --region us-east-1 \
+  --filters "Name=tag:Name,Values=xfusion-ec2-eip" \
+  --query "Addresses[*].AllocationId" \
+  --output text
+
+#Associate the Elastic IP with the instance
+aws ec2 associate-address \
+  --region us-east-1 \
+  --instance-id <INSTANCE_ID> \
+  --allocation-id <ALLOCATION_ID>
+
+#Verify the association
+aws ec2 describe-instances \
+  --region us-east-1 \
+  --instance-id <INSTANCE_ID> \
+  --query "Reservations[*].Instances[*].PublicIpAddress" \
+  --output text
