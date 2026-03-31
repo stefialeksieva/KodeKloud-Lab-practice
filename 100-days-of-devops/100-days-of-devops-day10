@@ -1,0 +1,43 @@
+Day 10: Linux Bash Scripts
+
+#Establish an SSH connection to the server1
+ssh tony@IP.IP.IP.IP
+
+#Create passwordless SSH 
+ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa
+
+
+#Copy the ssh key on the destionation server
+ssh-copy-id -i ~/.ssh/id_rsa.pub user@backup-server
+
+#Create the script directory
+sudo mkdir -p /scripts
+
+#Change the ownership
+sudo chown tony:tony /scripts
+
+#Create the script /scripts/ecommerce_backup.sh with the following content
+vim /scripts/ecommerce_backup.sh
+
+#!/bin/bash
+
+# Variables
+SRC_DIR="/var/www/html/official"
+BACKUP_DIR="/backup"
+ARCHIVE_NAME="xfusioncorp_official.zip"
+REMOTE_USER="clint"
+REMOTE_HOST="backup-server"
+REMOTE_DIR="/backup"
+
+# Create local backup archive
+zip -r ${BACKUP_DIR}/${ARCHIVE_NAME} ${SRC_DIR}
+
+# Copy archive to Nautilus Backup Server
+scp ${BACKUP_DIR}/${ARCHIVE_NAME} ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}/
+
+
+#Make it executable
+chmod +x /scripts/ecommerce_backup.sh
+
+# Test the script
+/scripts/ecommerce_backup.sh

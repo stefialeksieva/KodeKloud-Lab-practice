@@ -1,0 +1,37 @@
+Day 10: Attach Public IP to Azure Virtual Machine
+
+#Get Resourse Group
+az group list -o table
+
+#Get the NIC name attached to the VM
+az vm show \
+  --resource-group <RESOURCE_GROUP> \
+  --name datacenter-vm-pip \
+  --query "networkProfile.networkInterfaces[0].id" \
+  -o tsv
+
+az network nic show \
+  --resource-group <RESOURCE_GROUP> \
+  --name <NIC_NAME> \
+  --query "ipConfigurations[].name" \
+  -o tsv
+
+#Attach the public IP to the NIC
+az network nic ip-config update \
+  --resource-group <RESOURCE_GROUP> \
+  --nic-name <NIC_NAME> \
+  --name <IPCONFIG_NAME> \
+  --public-ip-address datacenter-pip
+
+#Verify
+az network nic show \
+  --resource-group <RESOURCE_GROUP> \
+  --name <NIC_NAME> \
+  --query "ipConfigurations[].publicIpAddress.id" \
+  -o table
+
+#Confirm the VM now has a public IP
+az vm list-ip-addresses \
+  --resource-group <RESOURCE_GROUP> \
+  --name datacenter-vm-pip \
+  -o table
