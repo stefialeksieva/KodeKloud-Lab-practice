@@ -28,8 +28,8 @@ vault_password_file = ./secrets/passwords.yml
 ansible-vault edit ~/playbooks/secrets/passwords.yml
 
 # Add the following lines in a file ~/playbooks/secrets/vault.txt
-dev_password_plain: 8FmzjvFU6S
-admin_password_plain: Rc5C9EyvbU
+dev_password_plain: xxxxxxx
+admin_password_plain: xxxxxxxx
 
 #Exit and Save
 
