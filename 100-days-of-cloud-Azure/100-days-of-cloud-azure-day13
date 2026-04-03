@@ -1,0 +1,56 @@
+Day 13: SSH into an Azure Virtual Machine
+
+#Verify SSH key is exist
+cat /root/.ssh/id_rsa.pub
+
+#If not, you will need to generate the key
+
+#Get the resource Group
+az group list -o table
+
+#Get the VM’s Public IP using Azure CLI
+az vm list-ip-addresses \
+  --name datacenter-vm \
+  --resource-group <RESOURCE_GROUP_NAME> \
+  --query "[].virtualMachine.network.publicIpAddresses[].ipAddress" \
+  --output tsv
+
+#SSH into the Azure VM as azureuser
+ssh azureuser@<PUBLIC_IP>
+
+#Switch the user to root
+sudo su -
+
+#Check the ssh configuration
+vim /etc/ssh/sshd_config
+
+#Ensure the lines are:
+PermitRootLogin yes
+PasswordAuthentication yes
+
+#Save and exit
+#Restart SSH deamon
+systemctl restart sshd
+
+#Create root’s .ssh directory
+mkdir -p /root/.ssh
+chmod 700 /root/.ssh
+
+
+# Add the Azure client host’s root public key
+cat /root/.ssh/id_rsa.pub
+
+echo "<PASTE_PUBLIC_KEY_HERE>" >> /root/.ssh/authorized_keys
+
+chmod 600 /root/.ssh/authorized_keys
+
+#Remove the line with "Please login as the user"
+vim /root/.ssh/authorized_keys
+
+#save and exit
+
+#Restart SSH deamon
+systemctl restart sshd
+
+#Test SSH from Azure client host
+ssh root@IP.IP.IP.IP

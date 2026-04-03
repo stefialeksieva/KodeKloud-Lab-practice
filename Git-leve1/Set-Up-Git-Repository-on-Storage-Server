@@ -1,0 +1,14 @@
+#Establish an SSH connection to the Storage Server
+ssh user@IP.IP.IP.IP
+
+#Change the user
+sudo su - 
+
+#Install git package
+yum install -y git
+
+#Create the repository /opt/news.git
+git init --bare /opt/news.git
+
+#Verify
+ls -l /opt/news.git

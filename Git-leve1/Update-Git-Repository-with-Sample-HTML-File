@@ -1,0 +1,29 @@
+#Copy index.html from the jump host → storage server
+#Note: you can get the user from the Details sheet in the KodeKloud lab
+
+scp /tmp/index.html user@ststor01:/usr/src/kodekloudrepos/demo/
+
+#Establish an SSH connection
+ssh user@ststor01
+
+#Switch user to root
+sudo su -
+
+# Add and commit the file inside the cloned repo
+cd /usr/src/kodekloudrepos/demo
+
+#Verify the file index.html is there
+ls -lah
+
+# Add the index.html file
+git add index.html
+
+#Commit it
+git commit -m "Add sample index.html"
+
+#Push the changes to the master branch
+git push origin master
+
+#Verify
+git ls-files
+git log --oneline

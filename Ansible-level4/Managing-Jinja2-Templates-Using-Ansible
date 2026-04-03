@@ -1,0 +1,25 @@
+#Create a playbook.yml
+---
+hosts: all
+become: true
+tasks:
+  - name: Create Apache document root directory
+    file:
+      path: /var/www/html/myroot
+      state: directory
+      owner: apache
+      group: apache
+      mode: '0755'
+
+  - name: Deploy phpinfo.php template
+    template:
+      src: phpinfo.php.j2
+      dest: /var/www/html/myroot/phpinfo.php
+      owner: apache
+      group: apache
+      mode: '0644'
+
+
+#Verify
+
+ansible-playbook -i /home/thor/ansible/inventory /home/thor/ansible/playbook.yml

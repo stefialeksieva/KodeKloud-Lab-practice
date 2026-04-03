@@ -1,0 +1,23 @@
+#Establish an SSH connection to the Storage Server
+ssh user@IP.IP.IP.IP
+
+#Change the user
+sudo su - 
+
+#Navigate to the repository directory
+cd /usr/src/kodekloudrepos/news
+
+#Check the branch
+git branch
+
+#Switch to master (you cannot delete the branch you’re on)
+git checkout master
+
+#Delete local branch
+git branch -D xfusioncorp_news
+
+#Delete remote branch
+git push origin --delete xfusioncorp_news
+
+#Verify
+git branch -a

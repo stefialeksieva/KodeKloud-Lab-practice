@@ -1,0 +1,13 @@
+Day 12: Add and Manage Tags for Azure Virtual Machines
+
+#Get Resourse Group
+az group list -o table
+
+#Get the VM name
+az vm list -d -o table
+
+# Add the tag to the VM
+az vm update \
+  --name <VM_NAME> \
+  --resource-group <RESOURCE_GROUP_NAME> \
+  --set tags.Environment=dev

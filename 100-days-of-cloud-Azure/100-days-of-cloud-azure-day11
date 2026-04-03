@@ -1,0 +1,28 @@
+Day 11: Change Azure Virtual Machine Size Using Console
+
+#Get Resourse Group
+az group list -o table
+
+#Stop the VM before resizing
+
+az vm deallocate \
+  --resource-group <RESOURCE_GROUP> \
+  --name devops-vm
+
+#Resize the VM to Standard_B2s
+az vm resize \
+  --resource-group <RESOURCE_GROUP> \
+  --name devops-vm \
+  --size Standard_B2s
+
+#Start the VM again
+az vm start \
+  --resource-group <RESOURCE_GROUP> \
+  --name devops-vm
+
+#Verify
+az vm show \
+  --resource-group <RESOURCE_GROUP> \
+  --name devops-vm \
+  --show-details \
+  --query "{status:instanceView.statuses[1].displayStatus, size:hardwareProfile.vmSize}"

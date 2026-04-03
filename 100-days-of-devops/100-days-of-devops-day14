@@ -1,0 +1,7 @@
+Day 14: Linux Process Troubleshooting
+
+#Establish an SSH to the server
+ssh user@IP.IP.IP.IP
+
+#Switch the username
+sudo su -

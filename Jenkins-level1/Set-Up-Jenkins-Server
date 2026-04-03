@@ -1,0 +1,21 @@
+#Establish an SSH connection to the Jenkins server
+ssh user@IP.IP.IP.IP
+
+#Switch the user to root
+sudo su -
+
+#Install Jenkins using yum 
+yum install -y java-11-openjdk
+yum install -y jenkins
+
+#Start, enable and check the status of Jenkins
+systemctl enable jenkins
+systemctl start jenkins
+systemctl status jenkins
+
+#Create the required admin user
+Username: admin
+Password: XXXXXXX
+Email: XXX@XXX
+
+#Click Save and Continue.

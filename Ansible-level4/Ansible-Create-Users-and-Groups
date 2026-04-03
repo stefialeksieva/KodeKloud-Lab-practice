@@ -1,0 +1,86 @@
+#Verify the files are on the jump host
+
+thor@jump-host ~/playbooks$ cat inventory 
+stapp01 ansible_host=stapp01 ansible_ssh_pass=XXXXXXXX ansible_user=tony
+stapp02 ansible_host=stapp02 ansible_ssh_pass=XXXXXXXX ansible_user=steve
+stapp03 ansible_host=stapp03 ansible_ssh_pass=XXXXXXXX ansible_user=banner
+
+thor@jump-host ~/playbooks$ cat ~/playbooks/data/users.yml
+admins:
+  - rob
+  - david
+  - joy
+
+developers:
+  - tim
+  - ray
+  - jim
+  - mark
+
+#Edit the Ansible configuration
+vim ~/playbooks/ansible.cfg
+
+#You need to set the secret
+[defaults]
+vault_password_file = ./secrets/passwords.yml
+
+#Edit the vault file
+ansible-vault edit ~/playbooks/secrets/passwords.yml
+
+# Add the following lines in a file ~/playbooks/secrets/vault.txt
+dev_password_plain: xxxxxxx
+admin_password_plain: xxxxxxxx
+
+#Exit and Save
+
+#Encrypt it
+ansible-vault encrypt ~/playbooks/secrets/passwords.yml
+
+#Create the playbook: ~/playbooks/add_users.yml with the content:
+vim ~/playbooks/add_users.yml
+
+---
+- name: Create users and groups for onboarding
+  hosts: stapp02
+  become: yes
+
+  vars_files:
+    - data/users.yml
+    - secrets/passwords.yml
+
+  tasks:
+
+    - name: Ensure groups exist
+      group:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - developers
+        - admins
+
+    - name: Create developer users
+      user:
+        name: "{{ item }}"
+        group: developers
+        home: "/var/www"
+        password: "{{ dev_password_plain | password_hash('sha512', 'salt1234') }}"
+        state: present
+      loop: "{{ developers }}"
+
+    - name: Create admin users
+      user:
+        name: "{{ item }}"
+        group: admins
+        groups: wheel
+        append: yes
+        password: "{{ admin_password_plain | password_hash('sha512', 'salt1234') }}"
+        state: present
+      loop: "{{ admins }}"
+
+#Veirfy
+
+#Navigate to the correct folder
+cd ~/playbooks
+
+#Run ansible playbook
+ansible-playbook -i inventory add_users.yml

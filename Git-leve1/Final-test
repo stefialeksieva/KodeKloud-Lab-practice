@@ -1,0 +1,87 @@
+Task 1
+
+#Establish an SSH connection to the Storage Server
+ssh user@IP.IP.IP.IP
+
+#Change the user
+sudo su - 
+
+#Create a directory
+mkdir -p /home/sarah/story-blog-t1q4
+
+#Navigate to the directory
+cd /home/sarah/story-blog-t1q4
+
+#Initialize a Git repository
+git init
+
+Task 2
+
+#Navigate to the folder ( because you are already on the Storage Server, but please make sure you are read carefully where the task is for Storage Server)
+cd /home/sarah/story-blog-t1q5
+
+#Verify the files are there
+ls -l
+
+#Stage the file for commit
+git add lion-and-mouse-t1q5.txt
+
+#Verify
+git status
+
+Task 3
+
+#Navigate to the folder
+cd /home/sarah/story-blog-t1q9
+
+# Add the file to .gitignore
+echo "notes-t1q9.txt" >> .gitignore
+
+#Verify
+git status
+
+# Add file
+git add .
+
+#Commit
+git commit -m "Ignore personal notes file notes-t1q9.txt"
+
+#Push the changes to master
+git push origin master
+
+Task 4 
+
+#Navigate to folder
+cd /usr/src/kodekloudrepos/ecommerce-t2q3
+
+#Change the branch to master
+git checkout master
+
+#Get the latest changes
+git pull origin master
+
+#Create a branch with name xfusion-t2q3
+git checkout -b xfusion-t2q3
+
+#Copy the file
+cp /tmp/index-t2q3.html .
+
+# Add the change
+git add index-t2q3.html
+
+#Commit
+git commit -m "Add index-t2q3.html for task t2q3"
+
+#Change the branch
+git checkout master
+
+#Merge the branch to master
+git merge xfusion-t2q3
+
+#Push the changes
+git push origin master
+git push origin xfusion-t2q3
+
+#Verify
+git branch -a
+git log --oneline --decorate --graph --all

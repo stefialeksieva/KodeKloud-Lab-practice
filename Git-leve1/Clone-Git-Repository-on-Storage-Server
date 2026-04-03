@@ -1,0 +1,11 @@
+#Establish an SSH connection to the Storage Server
+ssh user@IP.IP.IP.IP
+
+#Change the user
+sudo su - 
+
+#Clone the repository
+git clone /opt/blog.git /usr/src/kodekloudrepos/blog
+
+#Verify
+ls -l /usr/src/kodekloudrepos/blog
