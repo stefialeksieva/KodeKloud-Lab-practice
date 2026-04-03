@@ -1,0 +1,30 @@
+Day 11: Attach Elastic Network Interface to EC2 Instance
+
+#Get the ENI and EC2 instance
+aws ec2 describe-instances \
+  --filters "Name=tag:Name,Values=nautilus-ec2" \
+  --query "Reservations[0].Instances[0].InstanceId" \
+  --output text
+
+aws ec2 describe-network-interfaces \
+  --filters "Name=tag:Name,Values=nautilus-eni" \
+  --query "NetworkInterfaces[0].NetworkInterfaceId" \
+  --output text
+
+#Make sure the instance is fully initialized and change the instance id from the command #above i-xxxxxxx
+aws ec2 describe-instance-status \
+  --instance-id i-xxxxxxxxxxxx \
+  --query "InstanceStatuses[0].InstanceStatus.Status" \
+  --output text
+
+#Attach the ENI to the EC2 instance
+aws ec2 attach-network-interface \
+  --network-interface-id eni-xxxxxxxxxxxx \
+  --instance-id i-xxxxxxxxxxxx \
+  --device-index 1
+
+#Verify
+aws ec2 describe-network-interfaces \
+  --network-interface-ids eni-xxxxxxxxxxxx \
+  --query "NetworkInterfaces[0].Status" \
+  --output text

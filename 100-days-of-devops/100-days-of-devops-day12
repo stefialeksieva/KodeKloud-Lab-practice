@@ -1,0 +1,67 @@
+Day 12: Linux Network Services
+
+#Establish an SSH connection
+ssh user@IP.IP.IP.IP
+
+#Switch the user
+sudo su -
+
+#Check if Apache is running
+systemctl status httpd
+
+#If the service is not active, start and enable it
+systemctl start httpd
+systemctl enable httpd
+
+#Check if Apache is listening on port 8084
+ss -tulnp | grep 8084
+
+#If you see for example:
+#tcp LISTEN 127.0.0.1:8084 users:(("sendmail",pid=17088,fd=4))
+#it means, the port is already in use for other service
+#Now, we need to stop the service in my example is sendmail,
+#change the port in the configuration service and start the service
+systemctl stop sendmail
+
+ss -tulnp | grep 8084
+ss -tulnp | grep 2525
+
+#You need to have empty result if the port is free
+
+vim /etc/mail/sendmail.mc
+
+#Change the port to 2525, please make sure the port is free before that
+DAEMON_OPTIONS(`Port=2525,Addr=127.0.0.1, Name=MTA')
+
+#Save and exit
+
+#rebuild the config
+m4 /etc/mail/sendmail.mc > /etc/mail/sendmail.cf
+
+#Restart sendmail:
+systemctl restart sendmail
+
+#Start apache
+systemctl start httpd
+
+#If you don't see the result, open the Apache configuration file
+vim /etc/httpd/conf/httpd.conf
+
+#Check for line like
+Listen 8084
+
+#If it is not, change it to 8084 and save it; restart Apache service
+systemctl restart httpd
+
+#Check if firewall is blocking port 8084
+firewall-cmd --list-all
+
+#If 8084 is missing:
+firewall-cmd --add-port=8084/tcp --permanent
+firewall-cmd --reload
+
+#Veirfy
+curl http://localhost:8084
+
+#Test from the jump host
+curl http://IP.IP.IP.IP:8084

@@ -1,0 +1,39 @@
+Day 13: IPtables Installation And Configuration
+
+#Establish an SSH connection to the server
+ssh user@IP.IP.IP.IP
+
+#switch the user to root
+sudo su -
+
+#Install iptables and persistence
+yum install -y iptables iptables-services
+
+#Enable and Start the service
+systemctl enable iptables
+systemctl start iptables
+
+#LB server IP address to be set
+LBR_IP=IP.IP.IP.IP
+
+#Verify rules
+iptables -L -n
+
+#Delete the incorrect rules
+iptables -D INPUT -p tcp --dport 3000 -s IP.IP.IP.IP -j ACCEPT
+iptables -D INPUT -p tcp --dport 3000 -j DROP
+iptables -D INPUT -p tcp --dport 3000 -s IP.IP.IP.IP -j ACCEPT
+
+#Delete the REJECT rule temporarily
+iptables -D INPUT -j REJECT --reject-with icmp-host-prohibited
+
+# Add rules in the correct order
+iptables -A INPUT -p tcp -s $LBR_IP --dport 3000 -j ACCEPT
+iptables -A INPUT -p tcp --dport 3000 -j DROP
+iptables -A INPUT -j REJECT --reject-with icmp-host-prohibited
+
+#Save iptables rules so they persist after reboot
+iptables-save > /etc/sysconfig/iptables
+
+#Verify rules
+iptables -L -n

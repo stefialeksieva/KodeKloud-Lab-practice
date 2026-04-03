@@ -1,0 +1,16 @@
+Day 12: Attach Volume to EC2 Instance
+
+#Get the instance
+aws ec2 describe-instances --filters "Name=tag:Name,Values=devops-ec2" --query "Reservations[*].Instances[*].InstanceId" --output text
+
+#Get the volume ID
+aws ec2 describe-volumes --filters "Name=tag:Name,Values=devops-volume" --query "Volumes[*].VolumeId" --output text
+
+#Attach the volume
+aws ec2 attach-volume \
+  --volume-id vol-xxxxxxxxxxxxxxxx \
+  --instance-id i-xxxxxxxxxxxxxxxx \
+  --device /dev/sdb
+
+#Verify
+aws ec2 describe-volumes --volume-ids vol-xxxxxxxxxxxxxx --query "Volumes[*].Attachments"

@@ -1,0 +1,43 @@
+Day 11: Install and Configure Tomcat Server
+
+#Establish an ssh connection to the server as per the task
+ssh user@IP.IP.IP.IP
+
+#change the user
+sudo su -
+
+#Install Tomcat on the server
+yum install -y tomcat tomcat-webapps tomcat-admin-webapps
+
+#Enable and start it
+systemctl enable tomcat
+systemctl start tomcat
+
+#Change Tomcat port to 8085
+vim /etc/tomcat/server.xml
+
+#Locate the line where <Connector port="8080" protocol="HTTP/1.1" and change it to:
+<Connector port="8085" protocol="HTTP/1.1"
+
+#Save and restart Tomcat
+systemctl restart tomcat
+
+#Copy the file as per the task
+scp /tmp/ROOT.war user@IP.IP.IP.IP:/tmp/
+
+#After that, log on the server and move the file
+cp /tmp/ROOT.war /usr/share/tomcat/webapps/
+
+#Fix the ownership
+chown tomcat:tomcat /usr/share/tomcat/webapps/ROOT.war
+
+#Check the logs
+tail -f /var/log/tomcat/catalina.out
+
+#Restart Tomcat
+systemctl restart tomcat
+#Verify the deployment
+curl http://localhost:8085
+
+#From the jump-host
+curl http://IP.IP.IP.IP:8085
