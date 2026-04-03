@@ -1,0 +1,14 @@
+1. Use the Gitea web UI (there should have some button on the top right hand side) and sign in with the jon account (account was provided in the task)
+
+2. Navigate to Sarah’s repository with name "sarah/story-blog"
+
+3. Click the Fork button
+
+4. Gitea will show a dialog:
+Select jon as the owner of the fork
+Click Fork Repository
+
+5. Wait for the fork to complete
+
+6. Verify
+Click on Jon profile and locate the forked repository
