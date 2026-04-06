@@ -1,0 +1,47 @@
+Day 15: Create and Configure Network Security Group (NSG) in Azure
+
+#Get the resource Group
+az group list -o table
+
+#Create the Network Security Group (NSG)
+az network nsg create \
+  --resource-group <RESOURCE_GROUP> \
+  --name xfusion-nsg
+
+# Add inbound rule for HTTP (port 80)
+az network nsg rule create \
+  --resource-group <RESOURCE_GROUP> \
+  --nsg-name xfusion-nsg \
+  --name Allow-HTTP \
+  --priority 100 \
+  --protocol Tcp \
+  --direction Inbound \
+  --source-address-prefixes 0.0.0.0/0 \
+  --source-port-ranges '*' \
+  --destination-port-ranges 80 \
+  --access Allow
+
+# Add inbound rule for SSH (port 22)
+az network nsg rule create \
+  --resource-group <RESOURCE_GROUP> \
+  --nsg-name xfusion-nsg \
+  --name Allow-SSH \
+  --priority 110 \
+  --protocol Tcp \
+  --direction Inbound \
+  --source-address-prefixes 0.0.0.0/0 \
+  --source-port-ranges '*' \
+  --destination-port-ranges 22 \
+  --access Allow
+
+#Verify
+az network nsg show \
+  --resource-group <RESOURCE_GROUP> \
+  --name xfusion-nsg \
+  -o table
+
+#List rule
+az network nsg rule list \
+  --resource-group <RESOURCE_GROUP> \
+  --nsg-name xfusion-nsg \
+  -o table
