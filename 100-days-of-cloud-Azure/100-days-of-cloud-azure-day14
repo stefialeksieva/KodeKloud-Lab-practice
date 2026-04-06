@@ -1,0 +1,17 @@
+Day 14: Create and Attach Managed Disks in Azure
+
+#Get the resource Group
+az group list -o table
+
+#Create the managed Disk
+az disk create \
+  --resource-group <RESOURCE_GROUP> \
+  --name devops-disk \
+  --size-gb 2 \
+  --sku Standard_LRS
+
+#Verify
+az disk show \
+  --resource-group <RESOURCE_GROUP> \
+  --name devops-disk \
+  -o table

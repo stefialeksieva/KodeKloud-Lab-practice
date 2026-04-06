@@ -1,0 +1,12 @@
+Day 14: Terminate EC2 Instance
+
+#Get ec2 Instance
+aws ec2 describe-instances \
+  --filters "Name=tag:Name,Values=devops-ec2" \
+  --region us-east-1 \
+  --query "Reservations[].Instances[].InstanceId"
+
+#Terminate the instance, replace i-XXXXXXXXXX with the result of the command above.
+aws ec2 terminate-instances \
+  --instance-ids i-XXXXXXXXXX \
+  --region us-east-1

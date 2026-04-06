@@ -1,21 +1,21 @@
-Day 12: Attach Volume to EC2 Instance
+Day 13: Create AMI from EC2 Instance
 
-#Get the instance
+#Get ec2 instance
 aws ec2 describe-instances \
   --filters "Name=tag:Name,Values=xfusion-ec2" \
   --query "Reservations[*].Instances[*].InstanceId" \
   --output text
 
-#Create AMI
+#Create the AMI
 aws ec2 create-image \
   --instance-id $INSTANCE_ID \
   --name "xfusion-ec2-ami" \
   --no-reboot
 
-#Save it
-AMI_ID=ami-xxxxxxxxxxxx
+#Get the output and set the variable
+AMI_ID=ami-XXXXXXXX
 
-#Wait until the AMI becomes available
+#Wait until the ami is available
 aws ec2 wait image-available --image-ids $AMI_ID
 
 #Verify
@@ -23,4 +23,3 @@ aws ec2 describe-images \
   --image-ids $AMI_ID \
   --query "Images[*].{Name:Name,State:State}" \
   --output table
-

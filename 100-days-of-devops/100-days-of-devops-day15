@@ -1,0 +1,58 @@
+Day 15: Setup SSL for Nginx
+
+#Establish an SSH to the server
+ssh user@stapp02
+
+#Switch the username
+sudo su -
+
+#Install and enable Nginx
+yum install -y nginx
+systemctl enable nginx
+systemctl start nginx
+
+#Verify
+systemctl status nginx
+
+#Create SSL location
+mkdir -p /etc/nginx/ssl
+
+#Move SSL certificate + key to the correct location
+mv /tmp/nautilus.crt /etc/nginx/ssl/
+mv /tmp/nautilus.key /etc/nginx/ssl/
+
+#Set correct permissions
+chmod 600 /etc/nginx/ssl/nautilus.key
+chmod 644 /etc/nginx/ssl/nautilus.crt
+
+#Configure Nginx to use SSL
+vim /etc/nginx/nginx.conf
+
+#Inside http {...} add or modify the following content
+server {
+    listen 443 ssl;
+    server_name stapp02;
+
+    ssl_certificate     /etc/nginx/ssl/nautilus.crt;
+    ssl_certificate_key /etc/nginx/ssl/nautilus.key;
+
+    root /usr/share/nginx/html;
+    index index.html;
+}
+
+#Save and exit
+
+#Test nginx configuration
+nginx -t
+
+#Reload
+systemctl reload nginx
+
+#Create index.html
+echo "Welcome!" | sudo tee /usr/share/nginx/html/index.html
+
+#Verify the file is created
+cat /usr/share/nginx/html/index.html
+
+#Test on jump-host
+curl -Ik https://stapp02/

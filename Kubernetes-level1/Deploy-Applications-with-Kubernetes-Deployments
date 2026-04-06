@@ -1,0 +1,6 @@
+#Create the deployment
+kubectl create deployment httpd --image=httpd:latest
+
+#Verify
+kubectl get deployments
+kubectl get pods
