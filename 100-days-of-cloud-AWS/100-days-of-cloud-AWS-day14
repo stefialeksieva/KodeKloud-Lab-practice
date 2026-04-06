@@ -10,3 +10,9 @@ aws ec2 describe-instances \
 aws ec2 terminate-instances \
   --instance-ids i-XXXXXXXXXX \
   --region us-east-1
+
+#Verify
+aws ec2 describe-instances \
+  --instance-ids i-XXXXXXXXXX \
+  --region us-east-1 \
+  --query "Reservations[].Instances[].State.Name"

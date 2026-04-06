@@ -5,3 +5,4 @@ ssh user@IP.IP.IP.IP
 
 #Switch the username
 sudo su -
+
