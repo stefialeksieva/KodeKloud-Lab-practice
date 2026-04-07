@@ -1,0 +1,11 @@
+#Perform the rolling update
+kubectl set image deployment/nginx-deployment nginx-container=nginx:1.17
+
+#Watch the rollout progress
+kubectl rollout status deployment/nginx-deployment
+
+#Verify all pods are running the new version
+kubectl get pods -o wide
+
+#Confirm the image is nginx:1.17
+kubectl describe deployment nginx-deployment | grep Image

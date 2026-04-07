@@ -1,0 +1,10 @@
+#Create the namespace
+kubectl create namespace dev
+
+#Deploy the pod inside the dev namespace
+kubectl run dev-nginx-pod \
+  --image=nginx:latest \
+  --namespace=dev
+
+#Verify
+kubectl get pods -n dev
