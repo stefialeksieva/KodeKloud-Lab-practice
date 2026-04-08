@@ -1,0 +1,21 @@
+#Establish an SSH connection to the server
+ssh user@server-Name
+
+#switch user to root
+sudo su - 
+
+#change the ownership
+chown root:root /etc/hosts
+
+#Ensure “others” have read‑only permission
+chmod o=r /etc/hosts
+
+#Remove all permissions for user siva as per task
+setfacl -m u:siva:0 /etc/hosts
+
+#Grant read‑only permission to user garrett as per task
+setfacl -m u:garrett:r /etc/hosts
+
+#Verify
+ls -l /etc/hosts
+getfacl /etc/hosts

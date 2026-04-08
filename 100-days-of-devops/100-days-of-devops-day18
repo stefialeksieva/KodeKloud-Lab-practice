@@ -1,0 +1,30 @@
+Day 18: Install and Configure DB Server
+
+#Establish an SSH connection to the DB server
+ssh user@db-server-name
+
+#Switch user to root
+sudo su - 
+
+#Install, enable and start MariaDB
+yum install -y mariadb-server
+
+systemctl start mariadb
+systemctl enable mariadb
+
+# Create the database kodekloud_db2
+#Enter in MariaDb shell
+mysql
+
+#Run query
+CREATE DATABASE kodekloud_db2;
+
+#Create user kodekloud_joy with password
+CREATE USER 'kodekloud_joy'@'%' IDENTIFIED BY 'XXXXXXXXXXX';
+
+#Grant full permissions on the database
+GRANT ALL PRIVILEGES ON kodekloud_db2.* TO 'kodekloud_joy'@'%';
+FLUSH PRIVILEGES;
+
+#Exit
+EXIT;

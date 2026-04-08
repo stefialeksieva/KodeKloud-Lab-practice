@@ -1,0 +1,53 @@
+Day 21: Setting Up an EC2 Instance with an Elastic IP for Application Hosting
+
+#Get an Ubuntu AMI ID for us-east-1
+aws ec2 describe-images \
+  --owners 099720109477 \
+  --filters "Name=name,Values=ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*" \
+  --query 'Images[*].ImageId' \
+  --output text
+
+#Example result: ami-xxxxxxxxxxx
+
+AMI_ID=ami-xxxxxxxxxxx
+
+#Create the EC2 instance
+INSTANCE_ID=$(aws ec2 run-instances \
+  --image-id $AMI_ID \
+  --instance-type t2.micro \
+  --key-name xfusion-key \
+  --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=xfusion-ec2}]' \
+  --query 'Instances[0].InstanceId' \
+  --output text)
+
+#Create a key pair
+aws ec2 create-key-pair \
+  --key-name xfusion-key \
+  --query 'KeyMaterial' \
+  --output text > xfusion-key.pem
+
+#change the key permissions
+chmod 400 xfusion-key.pem
+
+#Allocate an Elastic IP
+EIP_ALLOC=$(aws ec2 allocate-address \
+  --domain vpc \
+  --tag-specifications 'ResourceType=elastic-ip,Tags=[{Key=Name,Value=xfusion-eip}]' \
+  --query 'AllocationId' \
+  --output text)
+
+#Get the instance ID:
+INSTANCE_ID=$(aws ec2 describe-instances \
+  --filters "Name=tag:Name,Values=xfusion-ec2" \
+  --query 'Reservations[0].Instances[0].InstanceId' \
+  --output text)
+
+#Associate
+aws ec2 associate-address \
+  --instance-id $INSTANCE_ID \
+  --allocation-id $EIP_ALLOC
+
+#Verify
+aws ec2 describe-instances \
+  --instance-ids $INSTANCE_ID \
+  --query 'Reservations[0].Instances[0].PublicIpAddress'

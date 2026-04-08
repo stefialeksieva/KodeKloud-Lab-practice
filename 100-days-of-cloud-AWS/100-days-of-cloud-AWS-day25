@@ -1,0 +1,43 @@
+Day 25: Setting Up an EC2 Instance and CloudWatch Alarm
+
+#Set AWS region
+aws configure set default.region us-east-1
+
+# Get AMI ID
+AMI_ID=$(aws ec2 describe-images \
+  --owners 099720109477 \
+  --filters "Name=name,Values=ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*" \
+  --query "Images[0].ImageId" \
+  --output text)
+
+#Now launch the instance:
+INSTANCE_ID=$(aws ec2 run-instances \
+  --image-id $AMI_ID \
+  --instance-type t2.micro \
+  --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=xfusion-ec2}]' \
+  --query "Instances[0].InstanceId" \
+  --output text)
+
+#Verify
+echo $INSTANCE_ID
+
+#Get the SNS topic ARN
+TOPIC_ARN=$(aws sns list-topics \
+  --query "Topics[?contains(TopicArn, 'xfusion-sns-topic')].TopicArn" \
+  --output text)
+
+#Create the CloudWatch alarm as per the task
+aws cloudwatch put-metric-alarm \
+  --alarm-name xfusion-alarm \
+  --metric-name CPUUtilization \
+  --namespace AWS/EC2 \
+  --statistic Average \
+  --period 300 \
+  --threshold 90 \
+  --comparison-operator GreaterThanOrEqualToThreshold \
+  --dimensions Name=InstanceId,Value=$INSTANCE_ID \
+  --evaluation-periods 1 \
+  --alarm-actions $TOPIC_ARN
+
+#Verify
+aws cloudwatch describe-alarms --alarm-names xfusion-alarm

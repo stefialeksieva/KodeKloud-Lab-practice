@@ -1,0 +1,25 @@
+#Update the Service NodePort as per task
+kubectl patch service nginx-service \
+  -p '{"spec": {"ports": [{"port": 80, "targetPort": 80, "nodePort": 32165}]}}'
+
+#Verify
+kubectl get svc nginx-service
+
+#Scale the Deployment replicas as per task
+kubectl scale deployment nginx-deployment --replicas=5
+
+#Verify
+kubectl get deploy nginx-deployment
+
+#Update the image
+kubectl set image deployment/nginx-deployment nginx-container=nginx:latest
+
+#To find the container name, you can run
+kubectl describe deployment nginx-deployment | grep -i "container name"
+
+#Check rollout status
+kubectl rollout status deployment/nginx-deployment
+
+#Verify
+kubectl get pods -o wide
+kubectl get svc nginx-service

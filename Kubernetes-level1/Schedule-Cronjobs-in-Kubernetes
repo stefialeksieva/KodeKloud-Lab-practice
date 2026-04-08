@@ -1,0 +1,26 @@
+#Create a CronJob YAML file with content
+vim devops-cronjob.yaml
+
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: devops
+spec:
+  schedule: "*/7 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: cron-devops
+              image: httpd:latest
+              command: ["echo", "Welcome to xfusioncorp!"]
+          restartPolicy: OnFailure
+
+#Save and exit
+
+# Apply the CronJob yaml file
+kubectl apply -f devops-cronjob.yaml
+
+#Verify
+kubectl get cronjobs

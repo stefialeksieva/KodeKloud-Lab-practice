@@ -1,0 +1,5 @@
+#Create and compress an archive file
+tar -czf james.tar.gz /data/james
+
+#Move the archive to /home
+mv james.tar.gz /home/

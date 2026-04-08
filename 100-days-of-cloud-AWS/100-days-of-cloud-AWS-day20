@@ -1,0 +1,29 @@
+Day 20: Create IAM Role for EC2 with Policy Attachment
+
+#Create the trust policy for EC2
+cat > trust-policy.json << 'EOF'
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+
+#Create the IAM role
+aws iam create-role \
+  --role-name iamrole_anita \
+  --assume-role-policy-document file://trust-policy.json
+
+#Attach the existing policy iampolicy_anita
+aws iam list-policies --scope Local | grep iampolicy_anita
+
+#Verify
+aws iam list-attached-role-policies \
+  --role-name iamrole_anita

@@ -1,0 +1,26 @@
+Day 17: Install and Configure PostgreSQL
+
+#Establish an SSH connection to the postgreSQL server
+ssh user@postgressql
+
+#Switch user to postgres
+sudo su - postgres
+
+#Connect to PostgreSQL
+psql
+
+# Create the user with query
+#You will need to change the password with actual which is requested and the username in task.
+CREATE USER username-in-task-in-lab WITH PASSWORD 'XXXXXXXXXX';
+
+#Create the database
+#You will need to to replace the database-name with actual database name as per task
+CREATE DATABASE database-name;
+
+#Grant full permissions on the database
+#Change the username with the username which you created above and change the database name with
+#actual database name
+GRANT ALL PRIVILEGES ON DATABASE database-name TO username-in-task-in-lab;
+
+#Exit psql
+\q

@@ -1,0 +1,7 @@
+Day 16: Create IAM User
+
+#Create the IAM user using AWS CLI
+aws iam create-user --user-name iamuser_james
+
+#Verify
+aws iam get-user --user-name iamuser_james

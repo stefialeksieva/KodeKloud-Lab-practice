@@ -1,0 +1,7 @@
+Day 17: Create IAM Group
+
+#Create the IAM group
+aws iam create-group --group-name iamgroup_kirsty
+
+#Verify
+aws iam get-group --group-name iamgroup_kirsty

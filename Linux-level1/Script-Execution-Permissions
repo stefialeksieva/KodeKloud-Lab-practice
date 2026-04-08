@@ -1,0 +1,14 @@
+#Establish an SSH connection to the server
+ssh user@server-Name
+
+#Switch the user to root
+sudo su -
+
+#Check the current permissions
+ls -l /tmp/xfusioncorp.sh
+
+#Change the permissions for the script, so the script to be executable
+chmod 645 /tmp/xfusioncorp.sh
+
+#Verify
+ls -l /tmp/xfusioncorp.sh

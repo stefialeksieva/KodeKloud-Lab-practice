@@ -1,0 +1,19 @@
+#Establish an SSH connection
+ssh user@server
+
+#Switch user to root
+sudo su - 
+
+#Edit the limits configuration file
+vim /etc/security/limits.conf
+
+# Add the following content
+nfsuser soft nproc 1027
+nfsuser hard nproc 2024
+
+#Save and exit
+
+#Ensure PAM uses limits.conf
+grep pam_limits.so /etc/pam.d/common-session
+
+#if missing the following line "session required pam_limits.so" - add it

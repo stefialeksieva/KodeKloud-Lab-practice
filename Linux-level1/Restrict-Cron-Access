@@ -1,0 +1,15 @@
+#Establish an SSH connection to the server as per task
+ssh user@server
+
+#Switch user to root
+sudo su -
+
+# Add the user to the /etc/cron.allow file
+sudo bash -c 'echo javed > /etc/cron.allow'
+
+#Ensure jerome user is denied
+sudo bash -c 'echo jerome > /etc/cron.deny'
+
+#Set correct permissions
+chmod 600 /etc/cron.allow /etc/cron.deny
+chown root:root /etc/cron.allow /etc/cron.deny

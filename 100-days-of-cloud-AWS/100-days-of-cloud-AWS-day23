@@ -1,0 +1,12 @@
+Day 23: Data Migration Between S3 Buckets Using AWS CLI
+
+# Enable versioning on the bucket
+aws s3api put-bucket-versioning \
+  --bucket xfusion-s3-25866 \
+  --versioning-configuration Status=Enabled \
+  --region us-east-1
+
+#Verify versioning is enabled
+aws s3api get-bucket-versioning \
+  --bucket xfusion-s3-25866 \
+  --region us-east-1

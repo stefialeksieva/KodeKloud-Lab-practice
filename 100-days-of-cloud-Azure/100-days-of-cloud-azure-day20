@@ -1,0 +1,35 @@
+Day 20: Deploy Azure Resources Using ARM Template
+
+#Get the resource Group
+az group list -o table
+
+#Edit the ARM template
+vim /root/arm-templates/vnet-deployment-template.json
+
+#Change name and displayName to arm-vnet-xfusion (example below)
+"name": "arm-vnet-xfusion",
+"tags": {
+    "displayName": "arm-vnet-xfusion",
+
+#Update addressPrefixes to 192.168.0.0/16
+"addressSpace": {
+    "addressPrefixes": [
+        "192.168.0.0/16"
+    ]
+}
+
+# Add new tag
+"Environment": "KKE-xfusion"
+
+#Block should look like
+"tags": {
+    "displayName": "arm-vnet-xfusion",
+    "Environment": "KKE-xfusion"
+}
+
+#Save and exit
+
+#Deploy the ARM template
+az deployment group create \
+  --resource-group <Resource_GROUP> \
+  --template-file /root/arm-templates/vnet-deployment-template.json

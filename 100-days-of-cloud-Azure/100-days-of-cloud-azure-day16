@@ -1,0 +1,38 @@
+Day 16: Create a Private Azure Blob Storage Container
+
+#Get the resource Group
+az group list -o table
+
+#Create the Storage Account
+az storage account create \
+  --name xfusionst10178 \
+  --resource-group <your-resource-group> \
+  --location eastus \
+  --sku Standard_LRS
+
+#Create the Private Blob Container
+az storage account keys list \
+  --account-name xfusionst10178 \
+  --resource-group <your-resource-group> \
+  -o table
+
+#Copy key1, you will need it for creating a container
+
+#Create the container 
+#Key must be in double quotas ""
+az storage container create \
+  --name xfusion-blob-17049 \
+  --account-name xfusionst10178 \
+  --account-key "<key1>" \
+  --public-access off
+
+#Verify
+az storage account show \
+  --name xfusionst10178 \
+  --resource-group <your-resource-group>
+
+#Check the container
+az storage container list \
+  --account-name xfusionst10178 \
+  --account-key "<key1>" \
+  -o table
