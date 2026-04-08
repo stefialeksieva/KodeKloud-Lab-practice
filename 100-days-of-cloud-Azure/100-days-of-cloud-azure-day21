@@ -1,0 +1,34 @@
+Day 21: Assigning Public IP to Virtual Machines
+
+#Get the resource Group
+az group list -o table
+
+RG=<RESOURCE_GROUP>
+
+#Generate SSH key on azure-client
+ssh-keygen -t rsa -b 4096
+
+#Create a Static Public IP
+az network public-ip create \
+  --resource-group $RG \
+  --name datacenter-pip \
+  --sku Standard \
+  --allocation-method Static \
+  --location centralus
+
+#Create the VM with Ubuntu + Standard_B1s + SSH key + static IP
+az vm create \
+  --resource-group $RG \
+  --name datacenter-vm \
+  --image UbuntuLTS \
+  --size Standard_B1s \
+  --admin-username azureuser \
+  --ssh-key-values ~/.ssh/id_rsa.pub \
+  --public-ip-address datacenter-pip \
+  --location centralus
+
+#Verify
+az vm list-ip-addresses -n datacenter-vm -g $RG -o table
+
+#Test
+ssh -i ~/.ssh/id_rsa azureuser@<STATIC_PUBLIC_IP>

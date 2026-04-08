@@ -1,0 +1,16 @@
+Day 22: Clone Git Repository on Storage Server
+
+#Establish an SSH connection to the server
+ssh user@server
+
+#Switch the user to root
+sudo su -
+
+#Ensure the destination directory exists
+mkdir -p /usr/src/kodekloudrepos
+
+#Clone the repository
+git clone /opt/media.git /usr/src/kodekloudrepos/media
+
+#Verify
+ls -la /usr/src/kodekloudrepos/media

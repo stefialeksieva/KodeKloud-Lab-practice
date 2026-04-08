@@ -1,0 +1,91 @@
+Day 22: Configuring Secure SSH Access to an EC2 Instance
+
+#Log in to the aws-client host
+aws sts get-caller-identity
+
+#Create key
+ssh-keygen -t rsa -b 4096 -f /root/.ssh/id_rsa -N ""
+
+#Create a key pair in AWS using the public key
+aws ec2 import-key-pair \
+  --key-name id_rsa \
+  --public-key-material file:///root/.ssh/id_rsa.pub \
+  --region us-east-1
+
+#Get AMI
+AMI=$(aws ec2 describe-images \
+  --owners amazon \
+  --filters "Name=name,Values=amzn2-ami-hvm-*-x86_64-gp2" \
+  --query "Images | sort_by(@, &CreationDate) | [-1].ImageId" \
+  --region us-east-1 \
+  --output text)
+
+#Launch the EC2 instance
+aws ec2 run-instances \
+  --image-id $AMI \
+  --instance-type t2.micro \
+  --key-name id_rsa \
+  --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=nautilus-ec2}]' \
+  --region us-east-1
+
+#Get the EC2 ID
+INSTANCE_ID=$(aws ec2 describe-instances \
+  --filters "Name=tag:Name,Values=nautilus-ec2" \
+  --query "Reservations[0].Instances[0].InstanceId" \
+  --region us-east-1 \
+  --output text)
+
+#Gey the public IP of the instance
+PUBLIC_IP=$(aws ec2 describe-instances \
+  --instance-ids $INSTANCE_ID \
+  --query "Reservations[0].Instances[0].PublicIpAddress" \
+  --region us-east-1 \
+  --output text)
+
+#Identify the security group attached to the instance
+aws ec2 describe-instances \
+  --instance-ids $INSTANCE_ID \
+  --query "Reservations[0].Instances[0].SecurityGroups" \
+  --region us-east-1 \
+  --output table
+
+#Example result: sg-xxxxxxxxxx
+
+SG_ID=sg-xxxxxxxxxx
+
+#Allow SSH (port 22) from anywhere or from your client
+aws ec2 authorize-security-group-ingress \
+  --group-id $SG_ID \
+  --protocol tcp \
+  --port 22 \
+  --cidr 0.0.0.0/0 \
+  --region us-east-1
+
+#Try SSH
+ssh -i /root/.ssh/id_rsa ec2-user@$PUBLIC_IP
+
+#Add the root key to the EC2 instance, once you logged in
+#Switch user to root
+sudo su -
+#Create directory
+mkdir -p /root/.ssh
+#Fix permissions for .ssh directory
+chmod 700 /root/.ssh
+
+#Add the key, you can get it from aws-client (jump-host{initial terminal}) 
+#with the following command (cat /root/.ssh/id_rsa.pub)
+echo "<PASTE_PUBLIC_KEY_HERE>" >> /root/.ssh/authorized_keys
+#Fix permissions for authorized_keys file
+chmod 600 /root/.ssh/authorized_keys
+
+#Exit from root user
+exit
+#Exit from ec2 instance
+exit
+
+#Test passwordless SSH as root
+ssh -i /root/.ssh/id_rsa root@$PUBLIC_IP
+
+#If you are seeing message like "Please login as the user "ec2-user" rather than the user "root"."
+#You need to establish an ssh connection to ec2 server and open file "/root/.ssh/authorized_keys"
+#and remove the line from there

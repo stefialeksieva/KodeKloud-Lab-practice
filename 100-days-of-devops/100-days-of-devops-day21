@@ -1,0 +1,13 @@
+Day 21: Set Up Git Repository on Storage Server
+
+#Establish an SSH connection to the server
+ssh user@server
+
+#Switch the user to root
+sudo su -
+
+#Create the bare repository
+git init --bare /opt/news.git
+
+#Verify
+ls -ld /opt/news.git

@@ -1,0 +1,19 @@
+Day 24: Git Create Branches
+
+#Establish an SSH connection to the server
+ssh user@server
+
+#Switch the user to root
+sudo su -
+
+#Go to the repository directory
+cd /usr/src/kodekloudrepos/demo
+
+#Confirm you are in master branch
+git checkout master
+
+#Create the new branch
+git branch xfusioncorp_demo
+
+#Verify
+git branch

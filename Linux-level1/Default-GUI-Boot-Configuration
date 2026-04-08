@@ -1,0 +1,11 @@
+#Establish an SSH connection to the server
+ssh user@server
+
+#Switch the user to root
+sudo su -
+
+#Enable GUI Boot by Default 
+systemctl set-default graphical.target
+
+#Verify
+systemctl get-default

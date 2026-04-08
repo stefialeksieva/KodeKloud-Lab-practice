@@ -1,0 +1,10 @@
+Day 23: Fork a Git Repository
+
+#To fork a repository in KodeKloud, you need to use Gitea UI with button
+#on the top right-hand side of the lab
+
+1. Log in to the Gitea UI portal with the given username and password as per the task
+2. Locate the repository (in my task was sarah's repository) and click on it
+3. Once it is opened, you can use "Fork" button on the top right-hand side
+4. It will open a new window and you will need to confirm the change
+5. Wait until forked is completed
