@@ -1,0 +1,13 @@
+Day 19: Attach IAM Policy to IAM User
+
+#Find the policy ARN
+aws iam list-policies --scope Local
+
+#Attach the policy to the user
+#Get the account-id from the previous command
+aws iam attach-user-policy \
+  --user-name iamuser_james \
+  --policy-arn arn:aws:iam::<account-id>:policy/iampolicy_james
+
+#Verify
+aws iam list-attached-user-policies --user-name iamuser_james

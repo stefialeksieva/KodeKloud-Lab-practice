@@ -1,0 +1,23 @@
+#Check the pod
+kubectl describe pod webserver
+
+#Based on the output, you could check the information and verify the image is correct
+#In my case, the image had typo and it needed a fix
+
+#Export the current YAML
+kubectl get pod webserver -o yaml > webserver.yaml
+
+#Edit the YAML file which you created
+vim webserver.yaml
+
+#Find line below and change it to image: httpd:latest
+image: httpd:latests
+
+#Delete the broken pod
+kubectl delete pod webserver
+
+#Recreate it
+kubectl apply -f webserver.yaml
+
+#Verify
+kubectl get pods

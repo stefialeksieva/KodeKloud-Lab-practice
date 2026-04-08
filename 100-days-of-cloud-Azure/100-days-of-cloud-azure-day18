@@ -1,0 +1,25 @@
+Day 18: Copy Data to an Azure Blob Storage Container
+
+#Get the resource Group
+az group list -o table
+
+#Get the storage account key
+az storage account keys list \
+  --account-name devopsst15314 \
+  --resource-group <your_resource_group> \
+  -o table
+
+#Upload /tmp/devops.txt to the Blob container
+az storage blob upload \
+  --account-name devopsst15314 \
+  --account-key "<paste_key_here>" \
+  --container-name devops-blob-31454 \
+  --name devops.txt \
+  --file /tmp/devops.txt
+  
+#Verify
+az storage blob list \
+  --account-name devopsst15314 \
+  --account-key "<paste_key_here>" \
+  --container-name devops-blob-31454 \
+  -o table

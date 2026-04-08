@@ -1,0 +1,9 @@
+#Establish an SSH connection to the server (if the task is not required to be execute on
+# jump-host server but it will be written in the task)
+ssh user@server-name
+
+#switch user to root
+sudo su - 
+
+#sed command to replace the script
+sed -i 's/About/Maritime/g' /root/nautilus.xml

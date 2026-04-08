@@ -1,0 +1,26 @@
+#Create the yaml file with content 
+vim countdown-datacenter.yaml
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: countdown-datacenter
+spec:
+  template:
+    metadata:
+      name: countdown-datacenter
+    spec:
+      containers:
+        - name: container-countdown-datacenter
+          image: fedora:latest
+          command: ["sleep", "5"]
+      restartPolicy: Never
+
+#Save and exit.
+
+#Apply the yaml file
+kubectl apply -f countdown-datacenter.yaml
+
+#Verify
+kubectl get jobs
+kubectl get pods

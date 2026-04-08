@@ -1,0 +1,89 @@
+#Inspect the pod to confirm the failure
+kubectl describe pod nginx-phpfpm
+
+#Inspect the ConfigMap
+kubectl get configmap nginx-config -o yaml
+
+#Fix the ConfigMap
+kubectl edit configmap nginx-config
+
+#Correct content of the configmap
+server {
+    listen 80;
+    server_name localhost;
+
+    root /usr/share/nginx/html;
+    index index.php index.html;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location ~ \.php$ {
+        include fastcgi_params;
+        fastcgi_pass 127.0.0.1:9000;
+        fastcgi_param SCRIPT_FILENAME /usr/share/nginx/html$fastcgi_script_name;
+    }
+}
+
+#Create pod.yaml try_files
+vim pod.yaml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-phpfpm
+  labels:
+    app: php-app
+spec:
+  containers:
+  - name: php-fpm-container
+    image: php:7.2-fpm-alpine
+    volumeMounts:
+    - name: shared-files
+      mountPath: /var/www/html
+
+  - name: nginx-container
+    image: nginx:latest
+    volumeMounts:
+    - name: shared-files
+      mountPath: /usr/share/nginx/html
+    - name: nginx-config-volume
+      mountPath: /etc/nginx/nginx.conf
+      subPath: nginx.conf
+    ports:
+    - containerPort: 80
+
+  volumes:
+  - name: shared-files
+    emptyDir: {}
+  - name: nginx-config-volume
+    configMap:
+      name: nginx-config
+
+#Save and exit (or change and exit)
+
+kubectl get svc -o yaml
+
+# Add protocol: TCP and name: http to the service port
+kubectl edit svc nginx-service
+
+ports:
+- name: http
+  port: 80
+  targetPort: 80
+  nodePort: 30008
+  protocol: TCP
+
+#Save and exit
+
+#Recreate the pod
+kubectl delete pod nginx-phpfpm
+kubectl apply -f pod.yaml
+
+#Verify
+kubectl get pods
+
+
+#Copy index.php into the container
+kubectl cp /home/thor/index.php nginx-phpfpm:/usr/share/nginx/html/index.php -c nginx-container

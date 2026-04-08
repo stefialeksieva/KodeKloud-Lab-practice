@@ -1,0 +1,25 @@
+Day 18: Create Read-Only IAM Policy for EC2 Console Access
+
+#Create the IAM policy document
+cat > ec2-readonly.json << 'EOF'
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ec2:Describe*"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+
+#Create the IAM policy
+aws iam create-policy \
+  --policy-name iampolicy_james \
+  --policy-document file://ec2-readonly.json
+
+#Verify
+aws iam list-policies --scope Local | grep iampolicy_james

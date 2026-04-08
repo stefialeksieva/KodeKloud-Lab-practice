@@ -1,0 +1,63 @@
+Day 16: Install and Configure Nginx as an LBR
+
+#Establish a SSH connection to application servers, I will give an example for one host
+#but the changes need to be applied on all application servers
+
+ssh user@stapp01
+
+#switch the user to root
+sudo su - 
+
+#Check Apache status
+systemctl status httpd
+
+#In case, Apache service is up and running, check the port
+ss -tlnp | grep httpd
+
+#Once you get the port in my case - 3003 because the result was
+#LISTEN 0      511                *:3003            *:*    users:(("httpd",pid=15898,fd=4),("httpd",pid=15897,fd=4),("httpd",pid=15896,fd=4),("httpd",pid=15888,fd=4))
+#It means you will need to configure the NGINX with 3003 port instead of 80.
+
+#Establish an SSH to the server
+ssh user@LBR-server
+
+#Switch the username
+sudo su -
+
+#Install, enable and start NGINX
+yum install nginx -y
+systemctl enable nginx
+systemctl start nginx
+
+#Verify
+systemctl status nginx
+
+#Edit the main nginx config 
+vim /etc/nginx/nginx.conf
+
+#Content should be:
+
+http {
+    upstream backend {
+        server app01:3003;
+        server app02:3003;
+        server app03:3003;
+    }
+
+    server {
+        listen 80;
+
+        location / {
+            proxy_pass http://backend;
+        }
+    }
+}
+
+#Test Nginx configuration
+nginx -t
+
+#If the nginx configuration is correct
+systemctl restart nginx
+
+#Test LB
+systemctl restart nginx

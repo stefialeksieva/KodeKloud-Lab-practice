@@ -1,0 +1,27 @@
+Day 19: Convert Public Azure Blob Container to Private
+
+#Get the resource Group
+az group list -o table
+
+#Get the storage account key
+az storage account keys list \
+  --account-name devopsst12652 \
+  --resource-group <Resource_GROUP> \
+  -o table
+
+#copy the key1
+
+#Convert the public container to private
+az storage container set-permission \
+  --name devops-container-13674 \
+  --account-name devopsst12652 \
+  --account-key "<paste_key_here>" \
+  --public-access off
+
+#Verify
+az storage container show-permission \
+  --name devops-container-13674 \
+  --account-name devopsst12652 \
+  --account-key "<paste_key_here>"
+
+#Exect to see - "publicAccess": null

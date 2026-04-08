@@ -1,0 +1,45 @@
+#Create the namespace
+kubectl create namespace xfusion
+
+#Create the ConfigMap
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: time-config
+  namespace: xfusion
+data:
+  TIME_FREQ: "7"
+EOF
+
+#Create the Pod
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: Pod
+metadata:
+  name: time-check
+  namespace: xfusion
+spec:
+  containers:
+    - name: time-check
+      image: busybox:latest
+      env:
+        - name: TIME_FREQ
+          valueFrom:
+            configMapKeyRef:
+              name: time-config
+              key: TIME_FREQ
+      command: ["/bin/sh", "-c"]
+      args:
+        - while true; do date >> /opt/data/time/time-check.log; sleep $TIME_FREQ; done
+      volumeMounts:
+        - name: log-volume
+          mountPath: /opt/data/time
+  volumes:
+    - name: log-volume
+      emptyDir: {}
+EOF
+
+#Verify
+kubectl get jobs
+kubectl get pods
